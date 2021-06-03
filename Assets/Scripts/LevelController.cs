@@ -17,8 +17,8 @@ public class LevelController : MonoBehaviour
     [Header("--Prefab--")]
     public GameObject _pipe;
 
-    [Header("--Pages--")]
-    public GameObject startPage, ingamePage, overPage;
+    [Header("--Page--")]
+    public GameObject initialPage, startPage, ingamePage, overPage;
 
     private List<Transform> all_pipes = new List<Transform>();
 
@@ -37,7 +37,7 @@ public class LevelController : MonoBehaviour
     private void Start()
     {
         pc = PlayerController.instance;
-        UpdateGameState(GameState.Start);
+        UpdateGameState(GameState.None);
     }
 
     void Update()
@@ -51,7 +51,11 @@ public class LevelController : MonoBehaviour
     {
         return gameState;
     }
-
+    public void PlayGame()
+    {
+        UpdateGameState(GameState.Start);
+    }
+   
     public void StartingGame()
     {
         UpdateGameState(GameState.Start);
@@ -60,6 +64,11 @@ public class LevelController : MonoBehaviour
     {
         UpdateGameState(GameState.GameOver);
     } 
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
     public void RunGame()
     {
         UpdateGameState(GameState.Running);
@@ -73,7 +82,7 @@ public class LevelController : MonoBehaviour
             case GameState.None:
                 {
                     pauseGame = true;
-
+                    initialPage.SetActive(true);
                     ingamePage.SetActive(false);
                     startPage.SetActive(false);
                     overPage.SetActive(false);
@@ -81,6 +90,7 @@ public class LevelController : MonoBehaviour
                 break;
             case GameState.Start:
                 {
+                    initialPage.SetActive(false);
                     ingamePage.SetActive(false);
                     startPage.SetActive(true);
                     overPage.SetActive(false);
@@ -92,6 +102,7 @@ public class LevelController : MonoBehaviour
                 break;
             case GameState.Running:
                 {
+                    initialPage.SetActive(false);
                     ingamePage.SetActive(true);
                     startPage.SetActive(false);
                     overPage.SetActive(false);
@@ -106,11 +117,13 @@ public class LevelController : MonoBehaviour
                     pc.CurrentScores = 0;
                     pc.UpdateScores();
 
+                    initialPage.SetActive(false);
                     ingamePage.SetActive(false);
                     startPage.SetActive(false);
                     overPage.SetActive(true);
                 }
                 break;
+                
         }
     }
 
